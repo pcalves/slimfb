@@ -1,0 +1,15 @@
+{
+    "name": "pcalves/slimfb",
+    "type": "Application",
+    "description": "Combines awesome open-source libraries (Slim, Twig, Paris) with the Facebook PHP SDK to create Facebook applications and page tabs.",
+    "homepage": "http://github.com/pcalves/slimfb",
+    "license": "MIT",
+    "require": {
+        "slim/slim":"2.3.*",
+        "slim/views": "*",
+        "twig/twig": "*",
+        "j4mie/paris": "*",
+        "facebook/php-sdk": "dev-master",
+        "php": ">=5.3.0"
+    }
+}

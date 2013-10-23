@@ -13,7 +13,7 @@ Installation
 --------------
 If you don't have [Composer](https://github.com/composer/composer) installed, *shame on you*. Otherwise:
     ```
-    composer init
+    composer install
     ```
 
 Configuration

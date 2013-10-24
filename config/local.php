@@ -2,9 +2,7 @@
 
 return array(
     'general'  => array(
-        'env'         => 'local',
-        // no trailing slash
-        'base_url'    => 'http://localhost'
+        'env'         => 'local'
     ),
 
     'metadata' => array(

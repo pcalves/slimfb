@@ -9,7 +9,6 @@
  * @link     http://github.com/pcalves/slimbfb
  *
  */
-define('DS', DIRECTORY_SEPARATOR);
 // Start session
 session_start();
 // IE Cookies Fix
@@ -107,16 +106,12 @@ $auth = function ($app, $config) {
             exit();
         } else {
             // Proceed knowing you have a logged in user who's authenticated.
-            try {
-                $token = $app->facebook->getAccessToken();
-                // set user
-                $me = $app->facebook->api('/me');
-                // check if user likes page
-                $likes = $app->facebook->api("/me/likes/" . $config['facebook']['pageid']);
-                if (!empty($likes['data'])) $app->likes = true;
-            } catch (FacebookApiException $e) {
-                error_log($e);
-            }
+            $token = $app->facebook->getAccessToken();
+            // set user
+            $me = $app->facebook->api('/me');
+            // check if user likes page
+            $likes = $app->facebook->api("/me/likes/" . $config['facebook']['pageid']);
+            if (!empty($likes['data'])) $app->likes = true;
         }
     };
 };

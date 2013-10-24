@@ -3,8 +3,6 @@
 return array(
     'general'  => array(
         'env'         => 'prod',
-        // no trailing slash
-        'base_url'    => 'http://www.example.com'
     ),
 
     'metadata' => array(

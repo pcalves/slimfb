@@ -9,23 +9,32 @@
  * @link     http://github.com/pcalves/slimbfb
  *
  */
+
+// CONSTANTS
+// directory separator
+define("DS", "/", true);
+// base path
+define('BASE_PATH', realpath(__DIR__).DS, true);
+
 // Start session
 session_start();
 // IE Cookies Fix
 header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-// Detect environment
-// change local server ip
-if ($_SERVER['SERVER_ADDR'] == '172.90.90.90') {
+
+// ENVIRONMENT AND CONFIG
+// TODO: override params based on environment, like in Laravel
+// TODO: define environments in a much, much better way
+if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
     $config = include './config/local.php';
 } else {
     $config = include './config/prod.php';
 }
 
-// Require app components
+// COMPONENTS
 require 'vendor/autoload.php';
 require 'vendor/facebook/php-sdk/src/facebook.php';
 
-// Initiate slim, configure slim to use twig
+// SLIM & TWIG
 // https://github.com/codeguy/Slim-Views#twig
 $app = new \Slim\Slim(
     array(
@@ -35,7 +44,7 @@ $app = new \Slim\Slim(
 );
 $view = $app->view();
 
-// Twig options
+// TWIG CONFIG
 // https://github.com/codeguy/Slim-Views#how-to-use-1
 $view->parserOptions = array(
     'debug' => true,
@@ -49,7 +58,7 @@ $view->parserExtensions = array(
     new \Slim\Views\TwigExtension(),
 );
 
-// Load facebook and define all necessary app parameters
+// FACEBOOK & APP PARAMS
 $app->facebook = new Facebook(
     array(
         'appId'  => $config['facebook']['appid'],
@@ -60,13 +69,13 @@ $app->facebook = new Facebook(
 $app->user = null;
 $app->likes = false;
 
-// load Paris models
-$models = glob("./models/*.php");
-foreach ($models as $filename) {
-    include $filename;
-}
+// PARIS (MODELS)
+// $models = glob("./models/*.php");
+// foreach ($models as $filename) {
+//     include $filename;
+// }
 
-// Idiorm basic config — DB Connection
+// IDIORM (ORM)
 ORM::configure($config['database']['dsn']);
 ORM::configure('username',       $config['database']['username']);
 ORM::configure('password',       $config['database']['password']);
@@ -75,7 +84,7 @@ ORM::configure('password',       $config['database']['password']);
 // http://stackoverflow.com/questions/1650591/whether-to-use-set-names
 ORM::configure('driver_options', array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
 
-// Pass data to every request
+// HOOK - runs before every request
 $app->hook(
     'slim.before.dispatch',
     function () use ($app, $config) {
@@ -83,14 +92,13 @@ $app->hook(
     }
 );
 
-// FB authentication function
+// FACEBOOK AUTHENTICATION
 $auth = function ($app, $config) {
     return function () use ($app, $config) {
         // if localhost, bypass authentication
         if ($config['general']['env'] === 'local') {
             return true;
         }
-
         $fb_scope = $config['facebook']['scope'];
         $canvas_page = $config['facebook']['canvas_page'];
         $user_id = $app->facebook->getUser();
@@ -98,28 +106,28 @@ $auth = function ($app, $config) {
         if (!$user_id) {
             // load permissions window
             $params = array(
-                'scope' => implode(',', $fb_scope),
+                'scope'        => implode(',', $fb_scope),
                 'redirect_uri' => $canvas_page
             );
             $auth_url = $app->facebook->getLoginUrl($params);
-            echo "<script>parent.location.href='" . $auth_url . "'</script>";
-            exit();
+            exit("<script>parent.location.href='".$auth_url."'</script>");
         } else {
             // Proceed knowing you have a logged in user who's authenticated.
             $token = $app->facebook->getAccessToken();
             // set user
             $me = $app->facebook->api('/me');
             // check if user likes page
-            $likes = $app->facebook->api("/me/likes/" . $config['facebook']['pageid']);
+            $likes = $app->facebook->api("/me/likes/".$config['facebook']['pageid']);
             if (!empty($likes['data'])) $app->likes = true;
         }
     };
 };
 
-// Load routes
+// ROUTES
 $routes = glob("./routes/*.php");
 foreach ($routes as $filename) {
     include $filename;
 }
 
+// RUN APP
 $app->run();

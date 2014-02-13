@@ -3,6 +3,7 @@
 return array(
     'general'  => array(
         'env'         => 'prod',
+        'base_url'    => 'http://example.com'
     ),
 
     'metadata' => array(

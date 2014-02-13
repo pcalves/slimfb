@@ -2,7 +2,8 @@
 
 return array(
     'general'  => array(
-        'env'         => 'local'
+        'env'         => 'local',
+        'base_url'    => 'http://local.dev/'
     ),
 
     'metadata' => array(

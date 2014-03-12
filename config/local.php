@@ -3,7 +3,7 @@
 return array(
     'general'  => array(
         'env'         => 'local',
-        'base_url'    => 'http://local.dev/'
+        'base_url'    => 'http://local.dev'
     ),
 
     'metadata' => array(

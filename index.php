@@ -24,7 +24,9 @@ header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT
 // ENVIRONMENT AND CONFIG
 // TODO: override params based on environment, like in Laravel
 // TODO: define environments in a much, much better way
-if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+if (isset($_SERVER['SERVER_ADDR'])
+    && $_SERVER['SERVER_ADDR'] == '127.0.0.1'
+) {
     $config = include './config/local.php';
 } else {
     $config = include './config/prod.php';
@@ -102,6 +104,14 @@ $auth = function ($app, $config) {
         $fb_scope = $config['facebook']['scope'];
         $canvas_page = $config['facebook']['canvas_page'];
         $user_id = $app->facebook->getUser();
+
+        // fix for third party cookies (Safari)
+        if (!isset($_REQUEST['signed_request'])
+            && !isset($_COOKIE['cookie_fix'])
+        ) {
+            exit("<script>window.top.location='".$config['general']['base_url'].DS.'cookies_fix'."'</script>");
+        }
+
         // if user permissions check fails, request permissions
         if (!$user_id) {
             // load permissions window

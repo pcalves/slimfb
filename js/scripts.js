@@ -7,7 +7,7 @@ var app = {
 
     bindUIActions: function() {
         // watch for the like button being pressed, refresh page
-        FB.Event.subscribe('edge.create', app.reloadWindow());
+        FB.Event.subscribe('edge.create', function () { app.reloadWindow(); });
     },
 
     reloadWindow: function() {

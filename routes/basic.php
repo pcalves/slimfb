@@ -12,18 +12,27 @@ $app->map(
     }
 )->via('GET', 'POST');
 
+// fix for third party cookies (Safari)
+$app->map(
+    '/cookies_fix',
+    function () use ($app, $config) {
+        setcookie('cookie_fix', true);
+        header("location: ".$config['facebook']['canvas_page']);
+    }
+)->via('GET', 'POST');
+
 // index
 $app->map(
     '/',
     $auth($app, $config),
     function () use ($app, $config) {
         if ($config['general']['env'] == 'local') {
-            $app->render('index.twig');
+            $app->render('pages/index.twig');
         } else if (!$app->likes) {
             // show prelike page
-            $app->render('prelike.twig');
+            $app->render('pages/prelike.twig');
         } else {
-            $app->render('index.twig');
+            $app->render('pages/index.twig');
         }
     }
 )->via('GET', 'POST');

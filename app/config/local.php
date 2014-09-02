@@ -2,8 +2,8 @@
 
 return array(
     'general'  => array(
-        'env'         => 'prod',
-        'base_url'    => 'http://example.com'
+        'env'         => 'local',
+        'base_url'    => 'http://local.dev'
     ),
 
     'metadata' => array(
@@ -14,8 +14,7 @@ return array(
     'facebook' => array(
         'appid'       => 'XXXXXXXXXXXXX',
         'secret'      => 'XXXXXXXXXXXXX',
-        'scope'       => array('email', 'user_likes'),
-        'pageid'      => 'XXXXXXXXXXXXX',
+        'scope'       => array('email'),
         'canvas_page' => 'https://www.facebook.com/pages/PageName/PAGEID?sk=app_APPID'
     ),
 

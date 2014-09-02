@@ -1,5 +1,6 @@
 <?php
-// channel
+// Channel URL
+// Fixes certain cross-domain issues for certain browsers.
 $app->map(
     '/channel',
     $auth($app, $config),
@@ -12,7 +13,7 @@ $app->map(
     }
 )->via('GET', 'POST');
 
-// fix for third party cookies (Safari)
+// Fix for third party cookies (Safari)
 $app->map(
     '/cookies_fix',
     function () use ($app, $config) {
@@ -21,7 +22,7 @@ $app->map(
     }
 )->via('GET', 'POST');
 
-// index
+// Index
 $app->map(
     '/',
     $auth($app, $config),
@@ -29,8 +30,9 @@ $app->map(
         if ($config['general']['env'] == 'local') {
             $app->render('pages/index.twig');
         } else if (!$app->likes) {
-            // show prelike page
-            $app->render('pages/prelike.twig');
+            // show fangate
+            // TODO: remove fangates after November 5th, 2014
+            $app->render('pages/fangate.twig');
         } else {
             $app->render('pages/index.twig');
         }
